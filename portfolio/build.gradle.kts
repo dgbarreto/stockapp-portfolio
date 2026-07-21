@@ -70,8 +70,10 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.ktor.client.okhttp)
         }
         desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -82,13 +84,15 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.serialization.kotlinxJson)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation("com.danilobarreto.stockapp:designsystem:0.1.3")
         }
         iosMain.dependencies {
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
