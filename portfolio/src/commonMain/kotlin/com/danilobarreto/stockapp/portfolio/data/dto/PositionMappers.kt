@@ -1,6 +1,8 @@
 package com.danilobarreto.stockapp.portfolio.data.dto
 
+import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
+import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 
 fun PositionDto.toDomain(): Position = Position(
     id = id,
@@ -9,4 +11,23 @@ fun PositionDto.toDomain(): Position = Position(
     avgPrice = avgPrice,
     createdAt = createdAt,
     updatedAt = updatedAt,
+)
+
+fun PortfolioSummaryDto.toDomain(): PortfolioSummary = PortfolioSummary(
+    totalValue = totalValue,
+    investedValue = investedValue,
+    profitValue = profitValue,
+    profitPercent = profitPercent,
+    positions = positions.map { it.toDomain() },
+)
+
+fun PositionSummaryItemDto.toDomain(): PositionSummary = PositionSummary(
+    id = id,
+    ticker = ticker,
+    quantity = quantity,
+    avgPrice = avgPrice,
+    currentPrice = currentPrice,
+    currentValue = currentValue,
+    profitPercent = profitPercent,
+    allocationPercent = allocationPercent,
 )

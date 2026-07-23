@@ -2,6 +2,7 @@ package com.danilobarreto.stockapp.portfolio.data
 
 import com.danilobarreto.stockapp.portfolio.data.dto.CreatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.ErrorResponseDto
+import com.danilobarreto.stockapp.portfolio.data.dto.PortfolioSummaryDto
 import com.danilobarreto.stockapp.portfolio.data.dto.PositionDto
 import com.danilobarreto.stockapp.portfolio.data.dto.UpdatePositionRequestDto
 import io.ktor.client.HttpClient
@@ -36,6 +37,9 @@ class PositionsApiClient(
 
     suspend fun deletePosition(id: String): PositionDto =
         httpClient.delete("$baseUrl/positions/$id").body()
+
+    suspend fun getSummary(): PortfolioSummaryDto =
+        httpClient.get("$baseUrl/positions/summary").body()
 }
 
 suspend fun parsePositionErrorMessage(exception: ClientRequestException): String =

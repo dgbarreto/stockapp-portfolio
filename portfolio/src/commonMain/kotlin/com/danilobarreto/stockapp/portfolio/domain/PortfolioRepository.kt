@@ -5,4 +5,5 @@ interface PortfolioRepository {
     suspend fun createPosition(ticker: String, quantity: Int, avgPrice: Double): Position
     suspend fun updatePosition(id: String, quantity: Int?, avgPrice: Double?): Position
     suspend fun deletePosition(id: String): Position
+    suspend fun getSummary(): PortfolioSummary
 }

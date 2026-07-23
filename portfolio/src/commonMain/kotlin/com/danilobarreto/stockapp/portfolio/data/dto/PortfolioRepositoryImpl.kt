@@ -4,6 +4,7 @@ import com.danilobarreto.stockapp.portfolio.data.dto.CreatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.UpdatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.toDomain
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioRepository
+import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
 
 class PortfolioRepositoryImpl(
@@ -20,4 +21,7 @@ class PortfolioRepositoryImpl(
 
     override suspend fun deletePosition(id: String): Position =
         apiClient.deletePosition(id).toDomain()
+
+    override suspend fun getSummary(): PortfolioSummary =
+        apiClient.getSummary().toDomain()
 }
