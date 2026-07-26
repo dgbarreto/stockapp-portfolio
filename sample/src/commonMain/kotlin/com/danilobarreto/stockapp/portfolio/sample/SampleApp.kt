@@ -1,25 +1,29 @@
 package com.danilobarreto.stockapp.portfolio.sample
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.setValue
 import com.danilobarreto.stockapp.auth.data.AuthApiClient
 import com.danilobarreto.stockapp.auth.data.AuthRepositoryImpl
 import com.danilobarreto.stockapp.auth.data.TokenStorage
 import com.danilobarreto.stockapp.auth.presentation.LoginScreen
 import com.danilobarreto.stockapp.auth.presentation.LoginViewModel
 import com.danilobarreto.stockapp.designsystem.theme.StockAppTheme
+import com.danilobarreto.stockapp.portfolio.data.PortfolioRepositoryImpl
+import com.danilobarreto.stockapp.portfolio.data.PositionsApiClient
+import com.danilobarreto.stockapp.portfolio.presentation.AddPositionScreen
+import com.danilobarreto.stockapp.portfolio.presentation.AddPositionViewModel
+import com.danilobarreto.stockapp.portfolio.presentation.DashboardScreen
+import com.danilobarreto.stockapp.portfolio.presentation.DashboardViewModel
 
-// Sample isolado do módulo portfolio: só valida login (via auth) + build da árvore de módulos.
-// Ainda não existe domain/data/presentation de Position aqui - assim que isso for implementado,
-// a tela de placeholder abaixo vira o dashboard/carteira de verdade.
+private sealed interface SampleScreen {
+    data object Dashboard : SampleScreen
+    data object AddPosition : SampleScreen
+}
+
 @Composable
 fun SampleApp() {
     val tokenStorage = remember { TokenStorage() }
@@ -28,21 +32,39 @@ fun SampleApp() {
     val authRepository = remember {
         AuthRepositoryImpl(AuthApiClient(httpClient, sampleBaseUrl()), tokenStorage)
     }
+    val portfolioRepository = remember {
+        PortfolioRepositoryImpl(PositionsApiClient(httpClient, sampleBaseUrl()))
+    }
     val loginViewModel = remember { LoginViewModel(authRepository) }
 
     val isLoggedIn by authRepository.isLoggedIn.collectAsState()
+    var screen by remember { mutableStateOf<SampleScreen>(SampleScreen.Dashboard) }
 
     StockAppTheme {
-        if (isLoggedIn) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Portfolio — em construção", style = MaterialTheme.typography.titleMedium)
-            }
-        } else {
+        if (!isLoggedIn) {
             LoginScreen(
                 viewModel = loginViewModel,
-                onLoginSuccess = { /* isLoggedIn muda e recompõe pro placeholder sozinho */ },
+                onLoginSuccess = { /* isLoggedIn muda e recompõe pro dashboard sozinho */ },
                 onNavigateToRegister = { /* sample é só login, de propósito */ }
             )
+        } else {
+            when (screen) {
+                SampleScreen.Dashboard -> {
+                    val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
+                    DashboardScreen(
+                        viewModel = dashboardViewModel,
+                        onAddPosition = { screen = SampleScreen.AddPosition },
+                    )
+                }
+                SampleScreen.AddPosition -> {
+                    val addPositionViewModel = remember { AddPositionViewModel(portfolioRepository) }
+                    AddPositionScreen(
+                        viewModel = addPositionViewModel,
+                        onBack = { screen = SampleScreen.Dashboard },
+                        onSaved = { screen = SampleScreen.Dashboard },
+                    )
+                }
+            }
         }
     }
 }
