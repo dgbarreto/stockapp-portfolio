@@ -3,6 +3,7 @@ package com.danilobarreto.stockapp.portfolio.data
 import com.danilobarreto.stockapp.portfolio.data.dto.CreatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.UpdatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.toDomain
+import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioRepository
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
@@ -13,8 +14,8 @@ class PortfolioRepositoryImpl(
     override suspend fun getPositions(): List<Position> =
         apiClient.getPositions().map { it.toDomain() }
 
-    override suspend fun createPosition(ticker: String, quantity: Int, avgPrice: Double): Position =
-        apiClient.createPosition(CreatePositionRequestDto(ticker, quantity, avgPrice)).toDomain()
+    override suspend fun createPosition(ticker: String, assetType: AssetType, quantity: Int, avgPrice: Double): Position =
+        apiClient.createPosition(CreatePositionRequestDto(ticker, assetType.name, quantity, avgPrice)).toDomain()
 
     override suspend fun updatePosition(id: String, quantity: Int?, avgPrice: Double?): Position =
         apiClient.updatePosition(id, UpdatePositionRequestDto(quantity, avgPrice)).toDomain()

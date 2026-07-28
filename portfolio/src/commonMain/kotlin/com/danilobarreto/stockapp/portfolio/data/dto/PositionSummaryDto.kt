@@ -15,6 +15,7 @@ data class PortfolioSummaryDto(
 data class PositionSummaryItemDto(
     val id: String,
     val ticker: String,
+    val assetType: String,
     val quantity: Int,
     val avgPrice: Double,
     val currentPrice: Double?,

@@ -1,5 +1,6 @@
 package com.danilobarreto.stockapp.portfolio.data.dto
 
+import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
@@ -7,6 +8,7 @@ import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 fun PositionDto.toDomain(): Position = Position(
     id = id,
     ticker = ticker,
+    assetType = AssetType.valueOf(assetType),
     quantity = quantity,
     avgPrice = avgPrice,
     createdAt = createdAt,
@@ -24,6 +26,7 @@ fun PortfolioSummaryDto.toDomain(): PortfolioSummary = PortfolioSummary(
 fun PositionSummaryItemDto.toDomain(): PositionSummary = PositionSummary(
     id = id,
     ticker = ticker,
+    assetType = AssetType.valueOf(assetType),
     quantity = quantity,
     avgPrice = avgPrice,
     currentPrice = currentPrice,
