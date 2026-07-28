@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class PositionDto(
     val id: String,
     val ticker: String,
+    val assetType: String,
     val quantity: Int,
     val avgPrice: Double,
     val createdAt: String,
@@ -15,6 +16,7 @@ data class PositionDto(
 @Serializable
 data class CreatePositionRequestDto(
     val ticker: String,
+    val assetType: String,
     val quantity: Int,
     val avgPrice: Double,
 )

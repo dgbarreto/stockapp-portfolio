@@ -1,6 +1,8 @@
 package com.danilobarreto.stockapp.portfolio.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +32,7 @@ import com.danilobarreto.stockapp.designsystem.components.StockAppErrorBanner
 import com.danilobarreto.stockapp.designsystem.theme.StockAppColors
 import com.danilobarreto.stockapp.designsystem.theme.StockAppTypography
 import com.danilobarreto.stockapp.designsystem.util.toDecimalString
+import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 
@@ -52,6 +55,7 @@ fun DashboardScreen(
             .fillMaxSize()
             .background(StockAppColors.surface1)
             .safeContentPadding()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Row(
@@ -187,7 +191,19 @@ private fun PositionRow(position: PositionSummary, fallbackColor: Color) {
             fallbackTextColor = fallbackColor,
         )
         Column(modifier = Modifier.weight(1f)) {
-            Text(position.ticker, style = StockAppTypography.bodyMedium, color = StockAppColors.textPrimary)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(position.ticker, style = StockAppTypography.bodyMedium, color = StockAppColors.textPrimary)
+                if (position.assetType == AssetType.FII) {
+                    Text(
+                        "FII",
+                        style = StockAppTypography.labelSmall,
+                        color = StockAppColors.textAccent,
+                        modifier = Modifier
+                            .background(StockAppColors.bgAccent, shape = RoundedCornerShape(100))
+                            .padding(horizontal = 6.dp, vertical = 1.dp)
+                    )
+                }
+            }
             Text(
                 "${position.quantity} un · PM R$ ${position.avgPrice.toDecimalString()}",
                 style = StockAppTypography.labelSmall,

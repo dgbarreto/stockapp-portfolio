@@ -3,6 +3,7 @@ package com.danilobarreto.stockapp.portfolio.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.danilobarreto.stockapp.portfolio.data.parsePositionErrorMessage
+import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioRepository
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +24,11 @@ class AddPositionViewModel(
     private val _uiState = MutableStateFlow<AddPositionUiState>(AddPositionUiState.Idle)
     val uiState: StateFlow<AddPositionUiState> = _uiState.asStateFlow()
 
-    fun save(ticker: String, quantity: Int, avgPrice: Double) {
+    fun save(ticker: String, assetType: AssetType, quantity: Int, avgPrice: Double) {
         viewModelScope.launch {
             _uiState.value = AddPositionUiState.Loading
             _uiState.value = try {
-                repository.createPosition(ticker.uppercase(), quantity, avgPrice)
+                repository.createPosition(ticker.uppercase(), assetType, quantity, avgPrice)
                 AddPositionUiState.Success
             } catch (e: ClientRequestException) {
                 AddPositionUiState.Error(parsePositionErrorMessage(e))
