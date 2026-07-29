@@ -1,9 +1,6 @@
 package com.danilobarreto.stockapp.portfolio.data
 
-import com.danilobarreto.stockapp.portfolio.data.dto.CreatePositionRequestDto
-import com.danilobarreto.stockapp.portfolio.data.dto.UpdatePositionRequestDto
 import com.danilobarreto.stockapp.portfolio.data.dto.toDomain
-import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioRepository
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
