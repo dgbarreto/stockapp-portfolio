@@ -46,7 +46,6 @@ private val allocationPalette = listOf(
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
-    onAddPosition: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -58,16 +57,7 @@ fun DashboardScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text("Carteira", style = StockAppTypography.titleLarge, color = StockAppColors.textPrimary)
-            Button(onClick = onAddPosition, shape = MaterialTheme.shapes.medium) {
-                Text("+ Nova posição")
-            }
-        }
+        Text("Carteira", style = StockAppTypography.titleLarge, color = StockAppColors.textPrimary)
 
         when (val state = uiState) {
             is DashboardUiState.Loading -> {

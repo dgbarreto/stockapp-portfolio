@@ -1,0 +1,72 @@
+<svg viewBox="0 0 498 1008" width="498" height="1008" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="498" height="1008" fill="#ECEAE3"/>
+<rect x="40" y="40" width="418" height="928" rx="46" fill="#111111"/>
+<rect x="54" y="54" width="390" height="900" rx="34" fill="#F7F6F2"/>
+<clipPath id="clip_40_40"><rect x="54" y="54" width="390" height="900" rx="34"/></clipPath>
+<g clip-path="url(#clip_40_40)">
+<text x="72" y="112" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="24" font-weight="500" fill="#1A1A1A" text-anchor="start">Carteira</text>
+<rect x="298" y="88" width="128" height="30" rx="100" fill="#0C447C"/>
+<text x="362" y="108" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#FFFFFF" text-anchor="middle">+ Nova posição</text>
+<text x="72" y="146" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="start">Valor total</text>
+<text x="72" y="172" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#1A1A1A" text-anchor="start">R$ 48.912,30</text>
+<text x="72" y="192" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="500" fill="#27500A" text-anchor="start">▲ +17,9% (R$ 7.412,30)</text>
+<text x="262" y="192" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#888780" text-anchor="start">desde a compra</text>
+<rect x="72" y="214" width="173.0" height="54" rx="8" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<text x="84" y="236" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#5F5E5A" text-anchor="start">Investido</text>
+<text x="84" y="256" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#1A1A1A" text-anchor="start">R$ 41.500,00</text>
+<rect x="253.0" y="214" width="173.0" height="54" rx="8" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<text x="265.0" y="236" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#5F5E5A" text-anchor="start">Rentabilidade</text>
+<text x="265.0" y="256" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#27500A" text-anchor="start">+17,9%</text>
+<text x="72" y="292" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#1A1A1A" text-anchor="start">Ativos</text>
+<text x="426" y="292" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#888780" text-anchor="end">4 posições</text>
+<rect x="72" y="306" width="354" height="224" rx="14" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<circle cx="102" cy="334.0" r="16" fill="#EAF3DE"/>
+<text x="102" y="338.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" font-weight="500" fill="#27500A" text-anchor="middle">PETR</text>
+<text x="130" y="330.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="start">PETR4</text>
+<text x="130" y="347.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#888780" text-anchor="start">120 un · PM R$ 32,40</text>
+<text x="414" y="330.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="end">R$ 38,12</text>
+<text x="414" y="347.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#27500A" text-anchor="end">+17,7%</text>
+<line x1="72" y1="362" x2="426" y2="362" stroke="#E2DFD6" stroke-width="0.5"/>
+<circle cx="102" cy="390.0" r="16" fill="#FCEBEB"/>
+<text x="102" y="394.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" font-weight="500" fill="#791F1F" text-anchor="middle">MGLU</text>
+<text x="130" y="386.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="start">MGLU3</text>
+<text x="130" y="403.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#888780" text-anchor="start">300 un · PM R$ 9,80</text>
+<text x="414" y="386.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="end">R$ 8,15</text>
+<text x="414" y="403.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#791F1F" text-anchor="end">-16,8%</text>
+<line x1="72" y1="418" x2="426" y2="418" stroke="#E2DFD6" stroke-width="0.5"/>
+<circle cx="102" cy="446.0" r="16" fill="#E6F1FB"/>
+<text x="102" y="450.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" font-weight="500" fill="#0C447C" text-anchor="middle">VALE</text>
+<text x="130" y="442.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="start">VALE3</text>
+<text x="130" y="459.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#888780" text-anchor="start">80 un · PM R$ 61,20</text>
+<text x="414" y="442.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="end">R$ 65,90</text>
+<text x="414" y="459.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#27500A" text-anchor="end">+7,7%</text>
+<line x1="72" y1="474" x2="426" y2="474" stroke="#E2DFD6" stroke-width="0.5"/>
+<circle cx="102" cy="502.0" r="16" fill="#FAEEDA"/>
+<text x="102" y="506.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" font-weight="500" fill="#633806" text-anchor="middle">ITUB</text>
+<text x="130" y="498.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="start">ITUB4</text>
+<text x="130" y="515.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#888780" text-anchor="start">150 un · PM R$ 28,00</text>
+<text x="414" y="498.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A" text-anchor="end">R$ 30,55</text>
+<text x="414" y="515.0" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#27500A" text-anchor="end">+9,1%</text>
+<text x="72" y="556" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#1A1A1A" text-anchor="start">Distribuição</text>
+<rect x="72" y="572" width="109.74" height="8" rx="0" fill="#27500A"/>
+<rect x="181.74" y="572" width="92.04" height="8" rx="0" fill="#0C447C"/>
+<rect x="273.78000000000003" y="572" width="77.88" height="8" rx="0" fill="#633806"/>
+<rect x="351.66" y="572" width="74.34" height="8" rx="0" fill="#791F1F"/>
+<circle cx="76" cy="588" r="4" fill="#27500A"/>
+<text x="86" y="592" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1A1A1A" text-anchor="start">PETR4</text>
+<text x="426" y="592" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="end">31%</text>
+<circle cx="76" cy="610" r="4" fill="#0C447C"/>
+<text x="86" y="614" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1A1A1A" text-anchor="start">VALE3</text>
+<text x="426" y="614" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="end">26%</text>
+<circle cx="76" cy="632" r="4" fill="#633806"/>
+<text x="86" y="636" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1A1A1A" text-anchor="start">ITUB4</text>
+<text x="426" y="636" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="end">22%</text>
+<circle cx="76" cy="654" r="4" fill="#791F1F"/>
+<text x="86" y="658" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1A1A1A" text-anchor="start">MGLU3</text>
+<text x="426" y="658" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="end">21%</text>
+<rect x="189.0" y="54" width="120" height="28" rx="0" fill="#111111"/>
+<text x="78" y="84" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#1A1A1A" text-anchor="start">9:41</text>
+<text x="420" y="84" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="end">📶 📡 🔋</text>
+<rect x="182.0" y="941" width="134" height="5" rx="3" fill="rgba(0,0,0,0.25)"/>
+</g>
+</svg>

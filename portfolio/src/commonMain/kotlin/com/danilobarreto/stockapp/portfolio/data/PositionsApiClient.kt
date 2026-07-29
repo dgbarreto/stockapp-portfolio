@@ -23,25 +23,6 @@ class PositionsApiClient(
     suspend fun getPositions(): List<PositionDto> =
         httpClient.get("$baseUrl/positions").body()
 
-    suspend fun createPosition(dto: CreatePositionRequestDto): PositionDto =
-        httpClient.post("$baseUrl/positions") {
-            contentType(ContentType.Application.Json)
-            setBody(dto)
-        }.body()
-
-    suspend fun updatePosition(id: String, dto: UpdatePositionRequestDto): PositionDto =
-        httpClient.patch("$baseUrl/positions/$id") {
-            contentType(ContentType.Application.Json)
-            setBody(dto)
-        }.body()
-
-    suspend fun deletePosition(id: String): PositionDto =
-        httpClient.delete("$baseUrl/positions/$id").body()
-
     suspend fun getSummary(): PortfolioSummaryDto =
         httpClient.get("$baseUrl/positions/summary").body()
 }
-
-suspend fun parsePositionErrorMessage(exception: ClientRequestException): String =
-    runCatching { exception.response.body<ErrorResponseDto>().message }
-        .getOrDefault("Não foi possível completar a operação")
