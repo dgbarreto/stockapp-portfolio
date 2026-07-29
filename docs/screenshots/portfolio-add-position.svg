@@ -1,0 +1,31 @@
+<svg viewBox="0 0 498 808" width="498" height="808" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="498" height="808" fill="#ECEAE3"/>
+<rect x="40" y="40" width="418" height="728" rx="46" fill="#111111"/>
+<rect x="54" y="54" width="390" height="700" rx="34" fill="#F7F6F2"/>
+<clipPath id="clip_40_40"><rect x="54" y="54" width="390" height="700" rx="34"/></clipPath>
+<g clip-path="url(#clip_40_40)">
+<circle cx="88" cy="104" r="16" fill="#FFFFFF"/>
+<circle cx="88" cy="104" r="16" fill="none" stroke="#E2DFD6" stroke-width="1"/>
+<text x="88" y="109" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#1A1A1A" text-anchor="middle">←</text>
+<text x="72" y="150" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="24" font-weight="500" fill="#1A1A1A" text-anchor="start">Nova posição</text>
+<text x="72" y="174" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5F5E5A" text-anchor="start">Adicione uma ação ou FII que você já tem na carteira</text>
+<text x="72" y="206" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#5F5E5A" text-anchor="start">Ticker</text>
+<rect x="72" y="218" width="354" height="44" rx="8" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<text x="86" y="245" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#888780" text-anchor="start">PETR4</text>
+<text x="72" y="284" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#5F5E5A" text-anchor="start">Quantidade</text>
+<rect x="72" y="296" width="354" height="44" rx="8" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<text x="86" y="323" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#888780" text-anchor="start">100</text>
+<text x="72" y="362" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#5F5E5A" text-anchor="start">Preço médio (R$)</text>
+<rect x="72" y="374" width="354" height="44" rx="8" fill="#FFFFFF" stroke="#E2DFD6" stroke-width="1"/>
+<text x="86" y="401" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#888780" text-anchor="start">32,40</text>
+<rect x="72" y="440" width="354" height="56" rx="8" fill="#E6F1FB"/>
+<text x="86" y="462" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#0C447C" text-anchor="start">ⓘ O preço atual é buscado automaticamente pelo</text>
+<text x="86" y="478" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#0C447C" text-anchor="start">ticker. Você só informa quantidade e preço médio.</text>
+<rect x="72" y="520" width="354" height="44" rx="8" fill="#0C447C"/>
+<text x="249.0" y="547" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">Salvar posição</text>
+<rect x="189.0" y="54" width="120" height="28" rx="0" fill="#111111"/>
+<text x="78" y="84" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#1A1A1A" text-anchor="start">9:41</text>
+<text x="420" y="84" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="end">📶 📡 🔋</text>
+<rect x="182.0" y="741" width="134" height="5" rx="3" fill="rgba(0,0,0,0.25)"/>
+</g>
+</svg>

@@ -14,15 +14,6 @@ class PortfolioRepositoryImpl(
     override suspend fun getPositions(): List<Position> =
         apiClient.getPositions().map { it.toDomain() }
 
-    override suspend fun createPosition(ticker: String, assetType: AssetType, quantity: Int, avgPrice: Double): Position =
-        apiClient.createPosition(CreatePositionRequestDto(ticker, assetType.name, quantity, avgPrice)).toDomain()
-
-    override suspend fun updatePosition(id: String, quantity: Int?, avgPrice: Double?): Position =
-        apiClient.updatePosition(id, UpdatePositionRequestDto(quantity, avgPrice)).toDomain()
-
-    override suspend fun deletePosition(id: String): Position =
-        apiClient.deletePosition(id).toDomain()
-
     override suspend fun getSummary(): PortfolioSummary =
         apiClient.getSummary().toDomain()
 }

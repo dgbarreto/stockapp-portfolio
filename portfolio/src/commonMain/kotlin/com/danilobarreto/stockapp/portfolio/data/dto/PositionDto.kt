@@ -12,24 +12,3 @@ data class PositionDto(
     val createdAt: String,
     val updatedAt: String,
 )
-
-@Serializable
-data class CreatePositionRequestDto(
-    val ticker: String,
-    val assetType: String,
-    val quantity: Int,
-    val avgPrice: Double,
-)
-
-@Serializable
-data class UpdatePositionRequestDto(
-    val quantity: Int? = null,
-    val avgPrice: Double? = null,
-)
-
-@Serializable
-data class ErrorResponseDto(
-    val statusCode: Int,
-    val message: String,
-    val error: String? = null,
-)
