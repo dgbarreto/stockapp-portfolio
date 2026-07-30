@@ -14,8 +14,6 @@ import com.danilobarreto.stockapp.auth.presentation.LoginViewModel
 import com.danilobarreto.stockapp.designsystem.theme.StockAppTheme
 import com.danilobarreto.stockapp.portfolio.data.PortfolioRepositoryImpl
 import com.danilobarreto.stockapp.portfolio.data.PositionsApiClient
-import com.danilobarreto.stockapp.portfolio.presentation.AddPositionScreen
-import com.danilobarreto.stockapp.portfolio.presentation.AddPositionViewModel
 import com.danilobarreto.stockapp.portfolio.presentation.DashboardScreen
 import com.danilobarreto.stockapp.portfolio.presentation.DashboardViewModel
 
@@ -48,23 +46,10 @@ fun SampleApp() {
                 onNavigateToRegister = { /* sample é só login, de propósito */ }
             )
         } else {
-            when (screen) {
-                SampleScreen.Dashboard -> {
-                    val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
-                    DashboardScreen(
-                        viewModel = dashboardViewModel,
-                        onAddPosition = { screen = SampleScreen.AddPosition },
-                    )
-                }
-                SampleScreen.AddPosition -> {
-                    val addPositionViewModel = remember { AddPositionViewModel(portfolioRepository) }
-                    AddPositionScreen(
-                        viewModel = addPositionViewModel,
-                        onBack = { screen = SampleScreen.Dashboard },
-                        onSaved = { screen = SampleScreen.Dashboard },
-                    )
-                }
-            }
+            val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
+            DashboardScreen(
+                viewModel = dashboardViewModel,
+            )
         }
     }
 }
