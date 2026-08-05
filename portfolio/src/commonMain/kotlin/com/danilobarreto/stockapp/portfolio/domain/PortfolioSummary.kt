@@ -19,4 +19,9 @@ data class PositionSummary(
     val profitPercent: Double?,
     val allocationPercent: Double?,
     val logoUrl: String?,
+    val dividendPerShareTtm: Double?,
+    val eps: Double?,
+    val bookValuePerShare: Double?,
+    val priceToSalesRatio: Double?,
+    val earningsCagr5y: Double?,
 )
