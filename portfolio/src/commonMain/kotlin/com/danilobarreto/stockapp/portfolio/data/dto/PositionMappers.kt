@@ -34,4 +34,9 @@ fun PositionSummaryItemDto.toDomain(): PositionSummary = PositionSummary(
     profitPercent = profitPercent,
     allocationPercent = allocationPercent,
     logoUrl = logoUrl,
+    dividendPerShareTtm = dividendPerShareTtm,
+    eps = eps,
+    bookValuePerShare = bookValuePerShare,
+    priceToSalesRatio = priceToSalesRatio,
+    earningsCagr5y = earningsCagr5y,
 )
