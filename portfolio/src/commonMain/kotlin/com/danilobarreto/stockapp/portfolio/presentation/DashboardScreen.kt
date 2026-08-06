@@ -35,6 +35,8 @@ import com.danilobarreto.stockapp.designsystem.util.toDecimalString
 import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.TextButton
 
 private val allocationPalette = listOf(
     StockAppColors.textSuccess,
@@ -46,30 +48,50 @@ private val allocationPalette = listOf(
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
+    onAddOrder: () -> Unit,
+    onImport: () -> Unit,
+    onViewValuation: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(StockAppColors.surface1)
-            .safeContentPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        Text("Carteira", style = StockAppTypography.titleLarge, color = StockAppColors.textPrimary)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(StockAppColors.surface1)
+                .safeContentPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            Text("Carteira", style = StockAppTypography.titleLarge, color = StockAppColors.textPrimary)
 
-        when (val state = uiState) {
-            is DashboardUiState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.padding(top = 24.dp))
-            }
-            is DashboardUiState.Error -> {
-                StockAppErrorBanner(state.message, modifier = Modifier.padding(top = 24.dp))
-            }
-            is DashboardUiState.Success -> {
-                DashboardContent(state.summary)
+            when (val state = uiState) {
+                is DashboardUiState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.padding(top = 24.dp))
+                }
+                is DashboardUiState.Error -> {
+                    StockAppErrorBanner(state.message, modifier = Modifier.padding(top = 24.dp))
+                }
+                is DashboardUiState.Success -> {
+                    DashboardContent(state.summary)
+                }
             }
         }
+
+        TextButton(
+            onClick = onViewValuation,
+            modifier = Modifier.align(Alignment.TopStart).safeContentPadding().padding(16.dp)
+        ) { Text("Valuation") }
+
+        TextButton(
+            onClick = onImport,
+            modifier = Modifier.align(Alignment.TopEnd).safeContentPadding().padding(16.dp)
+        ) { Text("Importar") }
+
+        FloatingActionButton(
+            onClick = onAddOrder,
+            modifier = Modifier.align(Alignment.BottomEnd).safeContentPadding().padding(16.dp),
+        ) { Text("+") }
     }
 }
 
