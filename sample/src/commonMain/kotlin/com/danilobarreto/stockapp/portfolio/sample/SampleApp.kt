@@ -49,6 +49,9 @@ fun SampleApp() {
             val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
             DashboardScreen(
                 viewModel = dashboardViewModel,
+                onAddOrder = {  },
+                onImport = {  },
+                onViewValuation = {  },
             )
         }
     }
