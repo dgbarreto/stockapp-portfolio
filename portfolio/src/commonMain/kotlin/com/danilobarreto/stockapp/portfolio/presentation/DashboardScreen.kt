@@ -16,9 +16,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,6 +35,7 @@ import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 
 private val allocationPalette = listOf(
     StockAppColors.textSuccess,
@@ -53,6 +52,8 @@ fun DashboardScreen(
     onViewValuation: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) { viewModel.load() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
