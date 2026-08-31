@@ -9,6 +9,16 @@ plugins {
     alias(libs.plugins.sonarqube)
 }
 
+val localProperties = java.util.Properties().apply {
+    val f = file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
+val usingLocalComposite = listOf(
+    "useLocalDesignSystem",
+    "useLocalAuth",
+).any { localProperties.getProperty(it, "false").toBoolean() }
+
 sonar {
     properties {
         property("sonar.projectKey", "dgbarreto_stockapp-portfolio")
@@ -29,7 +39,9 @@ project(":sample-android") {
 }
 
 allprojects {
-    dependencyLocking {
-        lockAllConfigurations()
+    if (!usingLocalComposite) {
+        dependencyLocking {
+            lockAllConfigurations()
+        }
     }
 }

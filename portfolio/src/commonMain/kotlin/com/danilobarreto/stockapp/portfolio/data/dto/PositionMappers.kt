@@ -1,6 +1,8 @@
 package com.danilobarreto.stockapp.portfolio.data.dto
 
 import com.danilobarreto.stockapp.portfolio.domain.AssetType
+import com.danilobarreto.stockapp.portfolio.domain.MonthlyDividends
+import com.danilobarreto.stockapp.portfolio.domain.PortfolioHistoryPoint
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.Position
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
@@ -39,4 +41,14 @@ fun PositionSummaryItemDto.toDomain(): PositionSummary = PositionSummary(
     bookValuePerShare = bookValuePerShare,
     priceToSalesRatio = priceToSalesRatio,
     earningsCagr5y = earningsCagr5y,
+)
+
+fun MonthlyDividendsDto.toDomain(): MonthlyDividends = MonthlyDividends(
+    totalValue = totalValue,
+    paymentsCount = paymentsCount,
+)
+
+fun PortfolioHistoryPointDto.toDomain(): PortfolioHistoryPoint = PortfolioHistoryPoint(
+    month = month,
+    totalValue = totalValue,
 )
