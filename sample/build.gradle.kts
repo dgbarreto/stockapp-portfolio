@@ -37,8 +37,8 @@ kotlin {
             implementation(libs.ktor.client.auth)
             implementation(libs.kotlinx.serialization.json)
 
-            implementation("com.danilobarreto.stockapp:auth:0.1.0")
-            implementation("com.danilobarreto.stockapp:designsystem:0.1.3")
+            implementation("com.danilobarreto.stockapp:auth:0.2.0")
+            implementation("com.danilobarreto.stockapp:designsystem:0.4.0")
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)

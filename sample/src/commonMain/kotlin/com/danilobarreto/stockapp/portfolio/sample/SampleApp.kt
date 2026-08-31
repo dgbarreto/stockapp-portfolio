@@ -1,11 +1,21 @@
 package com.danilobarreto.stockapp.portfolio.sample
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.danilobarreto.stockapp.auth.data.AuthApiClient
 import com.danilobarreto.stockapp.auth.data.AuthRepositoryImpl
 import com.danilobarreto.stockapp.auth.data.TokenStorage
@@ -16,16 +26,20 @@ import com.danilobarreto.stockapp.portfolio.data.PortfolioRepositoryImpl
 import com.danilobarreto.stockapp.portfolio.data.PositionsApiClient
 import com.danilobarreto.stockapp.portfolio.presentation.DashboardScreen
 import com.danilobarreto.stockapp.portfolio.presentation.DashboardViewModel
+import com.danilobarreto.stockapp.portfolio.presentation.HomeScreen
+import com.danilobarreto.stockapp.portfolio.presentation.HomeViewModel
+import kotlinx.coroutines.launch
 
 private sealed interface SampleScreen {
+    data object Home : SampleScreen
     data object Dashboard : SampleScreen
-    data object AddPosition : SampleScreen
 }
 
 @Composable
 fun SampleApp() {
     val tokenStorage = remember { TokenStorage() }
     val httpClient = remember { createSampleHttpClient(tokenStorage) }
+    val coroutineScope = rememberCoroutineScope()
 
     val authRepository = remember {
         AuthRepositoryImpl(AuthApiClient(httpClient, sampleBaseUrl()), tokenStorage)
@@ -36,7 +50,7 @@ fun SampleApp() {
     val loginViewModel = remember { LoginViewModel(authRepository) }
 
     val isLoggedIn by authRepository.isLoggedIn.collectAsState()
-    var screen by remember { mutableStateOf<SampleScreen>(SampleScreen.Dashboard) }
+    var screen by remember { mutableStateOf<SampleScreen>(SampleScreen.Home) }
 
     StockAppTheme {
         if (!isLoggedIn) {
@@ -46,13 +60,39 @@ fun SampleApp() {
                 onNavigateToRegister = { /* sample é só login, de propósito */ }
             )
         } else {
-            val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
-            DashboardScreen(
-                viewModel = dashboardViewModel,
-                onAddOrder = {  },
-                onImport = {  },
-                onViewValuation = {  },
-            )
+            Column {
+                Row(modifier = Modifier.fillMaxWidth().safeContentPadding().padding(8.dp)) {
+                    TextButton(onClick = { screen = SampleScreen.Home }) { Text("Início") }
+                    TextButton(onClick = { screen = SampleScreen.Dashboard }) { Text("Carteira") }
+                    // Token antigo persistido de teste anterior pode ficar inválido/expirado
+                    // sem que `isLoggedIn` perceba (ele só checa se existe token salvo, não se
+                    // ainda é válido) — esse botão limpa o token e força passar pelo login de novo.
+                    TextButton(onClick = { coroutineScope.launch { authRepository.logout() } }) { Text("Sair") }
+                }
+                when (screen) {
+                    SampleScreen.Home -> {
+                        val homeViewModel = remember { HomeViewModel(portfolioRepository) }
+                        HomeScreen(
+                            userName = "Investidor",
+                            viewModel = homeViewModel,
+                            onNovaOrdem = {},
+                            onImportarB3 = {},
+                            onValuation = {},
+                            onCotacoes = { screen = SampleScreen.Dashboard },
+                            onVerCarteira = { screen = SampleScreen.Dashboard },
+                        )
+                    }
+                    SampleScreen.Dashboard -> {
+                        val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
+                        DashboardScreen(
+                            viewModel = dashboardViewModel,
+                            onAddOrder = {},
+                            onImport = {},
+                            onViewValuation = {},
+                        )
+                    }
+                }
+            }
         }
     }
 }

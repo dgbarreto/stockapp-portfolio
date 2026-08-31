@@ -25,3 +25,13 @@ data class PositionSummary(
     val priceToSalesRatio: Double?,
     val earningsCagr5y: Double?,
 )
+
+data class MonthlyDividends(
+    val totalValue: Double,
+    val paymentsCount: Int,
+)
+
+data class PortfolioHistoryPoint(
+    val month: String, // "2025-09"
+    val totalValue: Double,
+)
