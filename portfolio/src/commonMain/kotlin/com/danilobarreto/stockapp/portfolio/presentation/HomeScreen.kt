@@ -6,15 +6,21 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +55,7 @@ import com.danilobarreto.stockapp.designsystem.util.toDecimalString
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioHistoryPoint
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 import com.danilobarreto.stockapp.designsystem.icons.StockAppIcons
+import com.danilobarreto.stockapp.designsystem.theme.StockAppSpacing
 
 @Composable
 fun HomeScreen(
@@ -114,30 +122,34 @@ private fun HomeHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(StockAppColors.primary, shape = StockAppShapes.headerBottomRadius)
-            .safeContentPadding()
-            .padding(horizontal = 20.dp, vertical = 14.dp)
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+            .padding(
+                start = StockAppSpacing.screenHorizontal,
+                end = StockAppSpacing.screenHorizontal,
+                top = StockAppSpacing.headerTop,
+                bottom = StockAppSpacing.headerBottom,
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 StockAppAvatar(
                     imageUrl = null,
                     fallbackText = userName.initials(),
                     fallbackBackgroundColor = StockAppColors.onPrimary.copy(alpha = 0.18f),
                     fallbackTextColor = StockAppColors.onPrimary,
-                    size = 40.dp,
+                    size = 44.dp,
+                    shape = CircleShape,
+                    textStyle = StockAppTypography.titleMedium,
                 )
-                Column {
-                    Text("Olá,", style = StockAppTypography.bodySmall, color = StockAppColors.onPrimary.copy(alpha = 0.8f))
-                    Text(
-                        userName.ifBlank { "Investidor" },
-                        style = StockAppTypography.titleMedium,
-                        color = StockAppColors.onPrimary,
-                    )
-                }
+                Text(
+                    "Oi, ${userName.ifBlank { "Investidor" }}",
+                    style = StockAppTypography.titleMedium.copy(fontSize = 19.sp),
+                    color = StockAppColors.onPrimary,
+                )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HeaderIconButton(
@@ -157,7 +169,7 @@ private fun HomeHeader(
             "Patrimônio total",
             style = StockAppTypography.bodySmall,
             color = StockAppColors.onPrimary.copy(alpha = 0.8f),
-            modifier = Modifier.padding(top = 14.dp),
+            modifier = Modifier.padding(top = StockAppSpacing.xxl),
         )
         Text(
             if (!balanceVisible) "R$ ••••••" else summary?.let { "R$ ${it.totalValue.toDecimalString()}" } ?: "R$ —",
@@ -171,23 +183,25 @@ private fun HomeHeader(
                 "$sign${percent.toDecimalString()}% no total",
                 style = StockAppTypography.bodySmall,
                 color = StockAppColors.onPrimary.copy(alpha = 0.9f),
-                modifier = Modifier.padding(top = 6.dp),
+                modifier = Modifier.padding(top = 10.dp),
             )
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = StockAppSpacing.xl),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             TranslucentMetricCard(
                 modifier = Modifier.weight(1f),
                 label = "Proventos do mês",
                 value = dividends?.let { "R$ ${it.totalValue.toDecimalString()}" } ?: "—",
+                caption = dividends?.let { it.paymentsCount.toPaymentsCaption() }
             )
             TranslucentMetricCard(
                 modifier = Modifier.weight(1f),
                 label = "Investido",
                 value = summary?.let { "R$ ${it.investedValue.toDecimalString()}" } ?: "—",
+                caption = summary?.let { "${it.positions.size} ativos" }
             )
         }
     }
@@ -208,14 +222,27 @@ private fun HeaderIconButton(icon: ImageVector, contentDescription: String, onCl
 }
 
 @Composable
-private fun TranslucentMetricCard(modifier: Modifier = Modifier, label: String, value: String) {
+private fun TranslucentMetricCard(
+    modifier: Modifier = Modifier,
+    label: String,
+    value: String,
+    caption: String? = null,
+) {
     Column(
         modifier = modifier
             .background(StockAppColors.onPrimary.copy(alpha = 0.14f), shape = RoundedCornerShape(18.dp))
-            .padding(12.dp)
+            .padding(StockAppSpacing.cardPadding)
     ) {
-        Text(label, style = StockAppTypography.labelSmall, color = StockAppColors.onPrimary.copy(alpha = 0.85f))
-        Text(value, style = StockAppTypography.bodyMedium, color = StockAppColors.onPrimary, modifier = Modifier.padding(top = 4.dp))
+        Text(label, style = StockAppTypography.labelMedium, color = StockAppColors.onPrimary.copy(alpha = 0.85f))
+        Text(
+            value,
+            style = StockAppTypography.headerTitle.copy(fontSize = 20.sp),
+            color = StockAppColors.onPrimary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+        caption?.let {
+            Text(it, style = StockAppTypography.labelMedium, color = StockAppColors.onPrimary.copy(alpha = 0.75f), modifier = Modifier.padding(top = 2.dp))
+        }
     }
 }
 
@@ -228,102 +255,126 @@ private fun HomeContent(
     onCotacoes: () -> Unit,
     onVerCarteira: () -> Unit,
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+    Column(modifier = Modifier.padding(vertical = StockAppSpacing.lg)) {
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = StockAppSpacing.screenHorizontal),
+            horizontalArrangement = Arrangement.spacedBy(StockAppSpacing.itemGap),
         ) {
-            ShortcutCard(icon = StockAppIcons.Plus, label = "Nova ordem", onClick = onNovaOrdem)
-            ShortcutCard(icon = StockAppIcons.Upload, label = "Importar B3", onClick = onImportarB3)
-            ShortcutCard(icon = StockAppIcons.Target, label = "Valuation", onClick = onValuation)
-            ShortcutCard(icon = StockAppIcons.ChartCandle, label = "Cotações", onClick = onCotacoes)
+            item { ShortcutCard(icon = StockAppIcons.Plus, label = "Nova ordem", onClick = onNovaOrdem) }
+            item { ShortcutCard(icon = StockAppIcons.Upload, label = "Importar B3", onClick = onImportarB3) }
+            item { ShortcutCard(icon = StockAppIcons.Target, label = "Valuation", onClick = onValuation) }
+            item { ShortcutCard(icon = StockAppIcons.ChartCandle, label = "Cotações", onClick = onCotacoes) }
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp)
-                .background(StockAppColors.surface2, shape = StockAppShapes.cardRadiusLarge)
-                .padding(16.dp)
-        ) {
-            Text("Evolução", style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
-            Text(
-                "Últimos ${state.history.size} meses",
-                style = StockAppTypography.labelSmall,
-                color = StockAppColors.textMuted,
-                modifier = Modifier.padding(top = 2.dp, bottom = 12.dp),
-            )
-            if (state.history.size < 2) {
+        Column(modifier = Modifier.padding(horizontal = StockAppSpacing.screenHorizontal)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp)
+                    .background(StockAppColors.surface2, shape = StockAppShapes.cardRadiusLarge)
+                    .padding(16.dp)
+            ) {
                 Text(
-                    "Ainda não há histórico suficiente.",
-                    style = StockAppTypography.bodyMedium,
+                    "Evolução",
+                    style = StockAppTypography.titleMedium,
+                    color = StockAppColors.textPrimary
+                )
+                Text(
+                    "Últimos ${state.history.size} meses",
+                    style = StockAppTypography.labelSmall,
                     color = StockAppColors.textMuted,
+                    modifier = Modifier.padding(top = 2.dp, bottom = 12.dp),
                 )
-            } else {
-                StockAppAreaLineChart(
-                    values = state.history.map { it.totalValue.toFloat() },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    monthLabels(state.history).forEach { label ->
-                        Text(label, style = StockAppTypography.labelTable, color = StockAppColors.textMuted)
+                if (state.history.size < 2) {
+                    Text(
+                        "Ainda não há histórico suficiente.",
+                        style = StockAppTypography.bodyMedium,
+                        color = StockAppColors.textMuted,
+                    )
+                } else {
+                    StockAppAreaLineChart(
+                        values = state.history.map { it.totalValue.toFloat() },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        monthLabels(state.history).forEach { label ->
+                            Text(
+                                label,
+                                style = StockAppTypography.labelTable,
+                                color = StockAppColors.textMuted
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-                .background(StockAppColors.surface2, shape = StockAppShapes.cardRadius)
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                "Seus ativos",
-                style = StockAppTypography.titleMedium,
-                color = StockAppColors.textPrimary,
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-            )
-            if (state.summary.positions.isEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
-                    "Nenhuma posição cadastrada ainda.",
-                    style = StockAppTypography.bodyMedium,
-                    color = StockAppColors.textMuted,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    "Seus ativos",
+                    style = StockAppTypography.titleMedium,
+                    color = StockAppColors.textPrimary
                 )
-            } else {
-                state.summary.positions.take(4).forEach { position ->
-                    HomeAssetRow(position)
+                Text(
+                    "Ver carteira",
+                    style = StockAppTypography.labelMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    ),
+                    color = StockAppColors.primary,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(onClick = onVerCarteira)
+                        .padding(horizontal = 4.dp, vertical = 6.dp),
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(StockAppColors.surface2, shape = StockAppShapes.cardRadius)
+                    .padding(vertical = 6.dp)
+            ) {
+                if (state.summary.positions.isEmpty()) {
+                    Text(
+                        "Nenhuma posição cadastrada ainda.",
+                        style = StockAppTypography.bodyMedium,
+                        color = StockAppColors.textMuted,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    )
+                } else {
+                    state.summary.positions.take(4).forEach { position ->
+                        HomeAssetRow(position)
+                    }
                 }
             }
-            TextButton(onClick = onVerCarteira, modifier = Modifier.align(Alignment.End).padding(end = 8.dp)) {
-                Text("Ver carteira")
-            }
-        }
 
-        Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 16.dp)) {
-            Text(
-                "Alertas",
-                style = StockAppTypography.titleMedium,
-                color = StockAppColors.textPrimary,
-                modifier = Modifier.padding(bottom = 8.dp),
-            )
-            // Estático de propósito — sem dado real por trás ainda (ver docs/decisoes.md, Fase 14).
-            AlertRow(
-                icon = StockAppIcons.Bell,
-                text = "VALE3 passou de R$ 68,00",
-                highlighted = true,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            AlertRow(
-                icon = StockAppIcons.Coin,
-                text = "ITUB4 paga dividendo em 3 dias",
-                highlighted = false,
-            )
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 10.dp)) {
+                Text(
+                    "Alertas",
+                    style = StockAppTypography.titleMedium,
+                    color = StockAppColors.textPrimary,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+                // Estático de propósito — sem dado real por trás ainda (ver docs/decisoes.md, Fase 14).
+                AlertRow(
+                    icon = StockAppIcons.Bell,
+                    text = "VALE3 passou de R$ 68,00",
+                    highlighted = true,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                AlertRow(
+                    icon = StockAppIcons.Coin,
+                    text = "ITUB4 paga dividendo em 3 dias",
+                    highlighted = false,
+                )
+            }
         }
     }
 }
@@ -335,15 +386,16 @@ private fun ShortcutCard(icon: ImageVector, label: String, onClick: () -> Unit) 
             .width(92.dp)
             .background(StockAppColors.surface2, shape = RoundedCornerShape(20.dp))
             .clickable(onClick = onClick)
-            .padding(vertical = 14.dp, horizontal = 10.dp),
+            .padding(vertical = 16.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(icon, contentDescription = label, tint = StockAppColors.primary, modifier = Modifier.size(20.dp))
+        Icon(icon, contentDescription = label, tint = StockAppColors.primary, modifier = Modifier.size(22.dp))
         Text(
             label,
-            style = StockAppTypography.labelSmall.copy(fontSize = 12.sp),
+            style = StockAppTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
             color = StockAppColors.textPrimary,
             textAlign = TextAlign.Center,
+            maxLines = 1,
             modifier = Modifier.padding(top = 8.dp),
         )
     }
@@ -424,4 +476,11 @@ private fun String.initials(): String {
         parts.size == 1 -> parts[0].take(1).uppercase()
         else -> (parts.first().take(1) + parts.last().take(1)).uppercase()
     }
+}
+
+private fun Int?.toPaymentsCaption(): String = when (this) {
+    null -> "—"
+    0 -> "Nenhum pagamento"
+    1 -> "1 pagamento"
+    else -> "$this pagamentos"
 }
