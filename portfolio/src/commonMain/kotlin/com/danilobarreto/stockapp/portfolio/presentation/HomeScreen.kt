@@ -56,6 +56,13 @@ import com.danilobarreto.stockapp.portfolio.domain.PortfolioHistoryPoint
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 import com.danilobarreto.stockapp.designsystem.icons.StockAppIcons
 import com.danilobarreto.stockapp.designsystem.theme.StockAppSpacing
+import com.danilobarreto.stockapp.designsystem.util.toBrPercent
+import com.danilobarreto.stockapp.designsystem.util.toBrl
+
+private const val MASK = "R$ ••••••"
+
+private fun masked(visible: Boolean, value: () -> String): String =
+    if (visible) value() else MASK
 
 @Composable
 fun HomeScreen(
@@ -172,7 +179,7 @@ private fun HomeHeader(
             modifier = Modifier.padding(top = StockAppSpacing.xxl),
         )
         Text(
-            if (!balanceVisible) "R$ ••••••" else summary?.let { "R$ ${it.totalValue.toDecimalString()}" } ?: "R$ —",
+            masked(balanceVisible) { summary?.totalValue?.toBrl() ?: "R$ —" },
             style = StockAppTypography.displayXLarge,
             color = StockAppColors.onPrimary,
             modifier = Modifier.padding(top = 2.dp),
@@ -180,7 +187,7 @@ private fun HomeHeader(
         summary?.profitPercent?.let { percent ->
             val sign = if (percent >= 0) "+" else ""
             Text(
-                "$sign${percent.toDecimalString()}% no total",
+                "${percent.toBrPercent(signed = true)} no total",
                 style = StockAppTypography.bodySmall,
                 color = StockAppColors.onPrimary.copy(alpha = 0.9f),
                 modifier = Modifier.padding(top = 10.dp),
@@ -194,13 +201,13 @@ private fun HomeHeader(
             TranslucentMetricCard(
                 modifier = Modifier.weight(1f),
                 label = "Proventos do mês",
-                value = dividends?.let { "R$ ${it.totalValue.toDecimalString()}" } ?: "—",
+                value = masked(balanceVisible) { dividends?.totalValue?.toBrl() ?: "—" },
                 caption = dividends?.let { it.paymentsCount.toPaymentsCaption() }
             )
             TranslucentMetricCard(
                 modifier = Modifier.weight(1f),
                 label = "Investido",
-                value = summary?.let { "R$ ${it.investedValue.toDecimalString()}" } ?: "—",
+                value = masked(balanceVisible) { summary?.investedValue?.toBrl() ?: "—" },
                 caption = summary?.let { "${it.positions.size} ativos" }
             )
         }
@@ -420,14 +427,14 @@ private fun HomeAssetRow(position: PositionSummary) {
         }
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                position.currentPrice?.let { "R$ ${it.toDecimalString()}" } ?: "—",
+                position.currentPrice?.let { "R$ ${it.toBrl()}" } ?: "—",
                 style = StockAppTypography.bodyMedium,
                 color = StockAppColors.textPrimary,
             )
             position.profitPercent?.let { percent ->
                 val color = if (percent >= 0) StockAppColors.textSuccess else StockAppColors.textDanger
                 val sign = if (percent >= 0) "+" else ""
-                Text("$sign${percent.toDecimalString()}%", style = StockAppTypography.labelSmall, color = color)
+                Text("$sign${percent.toBrPercent(signed = true)}%", style = StockAppTypography.labelSmall, color = color)
             }
         }
     }
