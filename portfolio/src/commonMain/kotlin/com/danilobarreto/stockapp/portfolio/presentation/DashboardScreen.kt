@@ -6,6 +6,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -40,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.danilobarreto.stockapp.designsystem.components.StockAppAvatar
 import com.danilobarreto.stockapp.designsystem.components.StockAppErrorBanner
 import com.danilobarreto.stockapp.designsystem.components.StockAppPrimaryButton
@@ -48,6 +52,9 @@ import com.danilobarreto.stockapp.designsystem.icons.StockAppIcons
 import com.danilobarreto.stockapp.designsystem.theme.StockAppColors
 import com.danilobarreto.stockapp.designsystem.theme.StockAppShapes
 import com.danilobarreto.stockapp.designsystem.theme.StockAppTypography
+import com.danilobarreto.stockapp.designsystem.util.toBrNumber
+import com.danilobarreto.stockapp.designsystem.util.toBrPercent
+import com.danilobarreto.stockapp.designsystem.util.toBrl
 import com.danilobarreto.stockapp.designsystem.util.toDecimalString
 import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
@@ -58,9 +65,28 @@ import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 private val allocationPalette = listOf(
     StockAppColors.primary,
     StockAppColors.primaryDeep,
-    StockAppColors.textWarning,
-    StockAppColors.textMuted,
+    StockAppColors.accent,
 )
+private const val MAX_SLICES = 3
+
+private data class AllocationSlice(val label: String, val percent: Double, val color: Color)
+
+private fun buildAllocationSlices(positions: List<PositionSummary>): List<AllocationSlice> {
+    val valued = positions
+        .mapNotNull { p -> p.currentValue?.takeIf { it > 0 }?.let { p.ticker to it } }
+        .sortedByDescending { it.second }
+    val total = valued.sumOf { it.second }
+    if (total <= 0) return emptyList()
+
+    val top = if (valued.size == MAX_SLICES + 1) valued else valued.take(MAX_SLICES)
+    val rest = valued.drop(top.size)
+
+    val slices = top.mapIndexed { i, (ticker, value) ->
+        AllocationSlice(ticker, value / total * 100, allocationPalette.getOrElse(i) { StockAppColors.chartOther })
+    }
+    return if (rest.isEmpty()) slices
+    else slices + AllocationSlice("Outros", rest.sumOf { it.second } / total * 100, StockAppColors.chartOther)
+}
 
 private enum class PositionFilter { ALL, STOCK, FII }
 
@@ -149,7 +175,7 @@ private fun DashboardHeader(
             modifier = Modifier.padding(top = 16.dp),
         )
         Text(
-            if (!balanceVisible) "R$ ••••••" else summary?.let { "R$ ${it.totalValue.toDecimalString()}" } ?: "R$ —",
+            if (!balanceVisible) "R$ ••••••" else summary?.totalValue?.toBrl() ?: "R$ —",
             style = StockAppTypography.displayMedium,
             color = StockAppColors.onPrimary,
             modifier = Modifier.padding(top = 2.dp),
@@ -158,7 +184,7 @@ private fun DashboardHeader(
             if (!balanceVisible) return@let
             val sign = if (percent >= 0) "+" else ""
             Text(
-                "$sign${percent.toDecimalString()}% · R$ ${summary.profitValue.toDecimalString()} desde a compra",
+                "${percent.toBrPercent()} · ${summary.profitValue.toBrl()} desde a compra",
                 style = StockAppTypography.bodySmall,
                 color = StockAppColors.onPrimary.copy(alpha = 0.9f),
                 modifier = Modifier.padding(top = 6.dp),
@@ -230,19 +256,26 @@ private fun DashboardContent(
                 .padding(16.dp)
         ) {
             Text("Distribuição", style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
-            AllocationBar(positions, modifier = Modifier.padding(top = 14.dp))
-            AllocationLegend(positions, modifier = Modifier.padding(top = 12.dp))
+            val slices = remember(positions) { buildAllocationSlices(positions) }
+            AllocationBar(slices, modifier = Modifier.padding(top = 16.dp))
+            AllocationLegend(slices, modifier = Modifier.padding(top = 14.dp))
         }
 
-        Text(
-            "Posições",
-            style = StockAppTypography.titleMedium,
-            color = StockAppColors.textPrimary,
-            modifier = Modifier.padding(top = 24.dp, bottom = 10.dp),
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Posições", style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
+            Text(
+                if (positions.size == 1) "1 posição" else "${positions.size} posições",
+                style = StockAppTypography.bodySmall,
+                color = StockAppColors.textSecondary,
+            )
+        }
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             positions.forEachIndexed { index, position ->
-                PositionCard(position, allocationPalette[index % allocationPalette.size], balanceVisible)
+                PositionCard(position, balanceVisible)
             }
         }
     }
@@ -293,55 +326,38 @@ private fun EmptyPositionsCard(onAddOrder: () -> Unit, modifier: Modifier = Modi
 }
 
 @Composable
-private fun AllocationBar(positions: List<PositionSummary>, modifier: Modifier = Modifier) {
+private fun AllocationBar(slices: List<AllocationSlice>, modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(10.dp)
-            .background(StockAppColors.border, shape = RoundedCornerShape(5.dp)),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = modifier.fillMaxWidth().height(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        positions.forEachIndexed { index, position ->
-            val weight = ((position.allocationPercent ?: 0.0) / 100.0).toFloat().coerceAtLeast(0f)
-            if (weight > 0f) {
-                Box(
-                    modifier = Modifier
-                        .weight(weight)
-                        .fillMaxSize()
-                        .background(allocationPalette[index % allocationPalette.size], shape = RoundedCornerShape(5.dp))
-                )
-            }
+        slices.forEach { slice ->
+            Box(
+                Modifier
+                    .weight(slice.percent.toFloat())
+                    .fillMaxHeight()
+                    .background(slice.color, RoundedCornerShape(5.dp))
+            )
         }
     }
 }
 
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun AllocationLegend(positions: List<PositionSummary>, modifier: Modifier = Modifier) {
-    // Chips (não linhas cheias) para bater com o protótipo — quebram linha sozinhas
-    // porque Row não tem flow nativo no Compose atual; como a lista costuma ser curta,
-    // deixamos rolar horizontalmente em vez de importar uma dependência de flow-layout.
-    Row(
-        modifier = modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+private fun AllocationLegend(slices: List<AllocationSlice>, modifier: Modifier = Modifier) {
+    FlowRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        positions.forEachIndexed { index, position ->
-            Row(
-                modifier = Modifier
-                    .background(StockAppColors.bg, shape = RoundedCornerShape(100))
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .background(allocationPalette[index % allocationPalette.size], shape = CircleShape)
-                )
-                Text(position.ticker, style = StockAppTypography.labelSmall, color = StockAppColors.textPrimary)
+        slices.forEach { slice ->
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Box(Modifier.size(10.dp).background(slice.color, RoundedCornerShape(3.dp)))
                 Text(
-                    position.allocationPercent?.let { "${it.toDecimalString()}%" } ?: "—",
-                    style = StockAppTypography.labelSmall,
-                    color = StockAppColors.textMuted,
+                    "${slice.label} ${slice.percent.toBrNumber(0)}%",
+                    style = StockAppTypography.bodyMedium,
+                    color = StockAppColors.textPrimary,
                 )
             }
         }
@@ -349,79 +365,69 @@ private fun AllocationLegend(positions: List<PositionSummary>, modifier: Modifie
 }
 
 @Composable
-private fun PositionCard(position: PositionSummary, fallbackColor: Color, balanceVisible: Boolean) {
+private fun PositionCard(position: PositionSummary, balanceVisible: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(StockAppColors.surface2, shape = StockAppShapes.cardRadius)
-            .padding(14.dp)
+            .padding(16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             StockAppAvatar(
                 imageUrl = position.logoUrl,
-                fallbackText = position.ticker,
-                fallbackBackgroundColor = fallbackColor.copy(alpha = 0.12f),
-                fallbackTextColor = fallbackColor,
+                fallbackText = position.ticker.take(4),
+                fallbackBackgroundColor = StockAppColors.primaryTint,
+                fallbackTextColor = StockAppColors.primaryDeep,
+                size = 44.dp,
+                textStyle = StockAppTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
             )
-            Column(modifier = Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(position.ticker, style = StockAppTypography.bodyMedium, color = StockAppColors.textPrimary)
-                    if (position.assetType == AssetType.FII) {
-                        Text(
-                            "FII",
-                            style = StockAppTypography.labelSmall,
-                            color = StockAppColors.textAccent,
-                            modifier = Modifier
-                                .background(StockAppColors.bgAccent, shape = RoundedCornerShape(100))
-                                .padding(horizontal = 6.dp, vertical = 1.dp)
-                        )
-                    }
-                }
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Text(position.ticker, style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
+                if (position.assetType == AssetType.FII) { /* badge FII como está */ }
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    position.currentPrice?.let { "R$ ${it.toDecimalString()}" } ?: "—",
-                    style = StockAppTypography.bodyMedium,
+                    position.currentPrice?.toBrl() ?: "—",
+                    style = StockAppTypography.titleMedium,
                     color = StockAppColors.textPrimary,
                 )
                 position.profitPercent?.let { percent ->
-                    val color = if (percent >= 0) StockAppColors.textSuccess else StockAppColors.textDanger
-                    val sign = if (percent >= 0) "+" else ""
-                    Text("$sign${percent.toDecimalString()}%", style = StockAppTypography.labelSmall, color = color)
+                    Text(
+                        percent.toBrPercent(signed = true),
+                        style = StockAppTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                        color = if (percent >= 0) StockAppColors.textSuccess else StockAppColors.textDanger,
+                    )
                 }
             }
         }
 
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 12.dp),
-            color = StockAppColors.divider,
-        )
+        HorizontalDivider(modifier = Modifier.padding(vertical = 14.dp), color = StockAppColors.divider)
 
         Row(modifier = Modifier.fillMaxWidth()) {
-            PositionStat(modifier = Modifier.weight(1f), label = "Qtde", value = "${position.quantity}")
-            PositionStat(modifier = Modifier.weight(1f), label = "Preço médio", value = "R$ ${position.avgPrice.toDecimalString()}")
+            PositionStat(Modifier.weight(1f), "Qtde", "${position.quantity}")
+            PositionStat(Modifier.weight(1f), "Preço médio", position.avgPrice.toBrl())
             PositionStat(
-                modifier = Modifier.weight(1f),
-                label = "Posição",
-                value = if (!balanceVisible) "••••••" else position.currentValue?.let { "R$ ${it.toDecimalString()}" } ?: "—",
-                alignEnd = true,
+                Modifier.weight(1f),
+                "Posição",
+                if (!balanceVisible) "R$ ••••••" else position.currentValue?.toBrl() ?: "—",
             )
         }
     }
 }
 
 @Composable
-private fun PositionStat(label: String, value: String, modifier: Modifier = Modifier, alignEnd: Boolean = false) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = if (alignEnd) Alignment.End else Alignment.Start,
-    ) {
-        Text(label, style = StockAppTypography.labelSmall, color = StockAppColors.textMuted)
+private fun PositionStat(modifier: Modifier, label: String, value: String) {
+    Column(modifier = modifier) {
+        Text(label, style = StockAppTypography.labelMedium, color = StockAppColors.textMuted)
         Text(
             value,
-            style = StockAppTypography.bodySmall,
+            style = StockAppTypography.bodyMedium.copy(fontSize = 15.sp),
             color = StockAppColors.textPrimary,
-            modifier = Modifier.padding(top = 2.dp),
+            modifier = Modifier.padding(top = 4.dp),
         )
     }
 }
