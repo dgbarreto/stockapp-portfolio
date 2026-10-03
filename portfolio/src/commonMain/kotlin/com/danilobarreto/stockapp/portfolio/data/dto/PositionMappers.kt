@@ -28,6 +28,7 @@ fun PortfolioSummaryDto.toDomain(): PortfolioSummary = PortfolioSummary(
 fun PositionSummaryItemDto.toDomain(): PositionSummary = PositionSummary(
     id = id,
     ticker = ticker,
+    companyName = companyName,
     assetType = AssetType.valueOf(assetType),
     quantity = quantity,
     avgPrice = avgPrice,

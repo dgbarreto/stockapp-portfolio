@@ -2,7 +2,6 @@ package com.danilobarreto.stockapp.portfolio.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danilobarreto.stockapp.designsystem.components.StockAppAvatar
@@ -55,7 +54,6 @@ import com.danilobarreto.stockapp.designsystem.theme.StockAppTypography
 import com.danilobarreto.stockapp.designsystem.util.toBrNumber
 import com.danilobarreto.stockapp.designsystem.util.toBrPercent
 import com.danilobarreto.stockapp.designsystem.util.toBrl
-import com.danilobarreto.stockapp.designsystem.util.toDecimalString
 import com.danilobarreto.stockapp.portfolio.domain.AssetType
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioSummary
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
@@ -93,12 +91,13 @@ private enum class PositionFilter { ALL, STOCK, FII }
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
+    balanceVisible: Boolean,
+    onToggleBalance: () -> Unit,
     onAddOrder: () -> Unit,
     onImport: () -> Unit,
     onViewValuation: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var balanceVisible by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) { viewModel.load() }
 
@@ -111,7 +110,7 @@ fun DashboardScreen(
         DashboardHeader(
             uiState = uiState,
             balanceVisible = balanceVisible,
-            onToggleBalance = { balanceVisible = !balanceVisible },
+            onToggleBalance = onToggleBalance,
         )
 
         when (val state = uiState) {
@@ -381,13 +380,20 @@ private fun PositionCard(position: PositionSummary, balanceVisible: Boolean) {
                 size = 44.dp,
                 textStyle = StockAppTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
             )
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Text(position.ticker, style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
-                if (position.assetType == AssetType.FII) { /* badge FII como está */ }
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(position.ticker, style = StockAppTypography.titleMedium, color = StockAppColors.textPrimary)
+                    if (position.assetType == AssetType.FII) { /* badge FII como está */ }
+                }
+                position.companyName?.let {
+                    Text(
+                        it,
+                        style = StockAppTypography.bodySmall,
+                        color = StockAppColors.textSecondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(

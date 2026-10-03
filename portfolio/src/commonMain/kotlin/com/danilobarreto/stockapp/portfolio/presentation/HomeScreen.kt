@@ -2,7 +2,6 @@ package com.danilobarreto.stockapp.portfolio.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,16 +26,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,7 +45,6 @@ import com.danilobarreto.stockapp.designsystem.components.StockAppErrorBanner
 import com.danilobarreto.stockapp.designsystem.theme.StockAppColors
 import com.danilobarreto.stockapp.designsystem.theme.StockAppShapes
 import com.danilobarreto.stockapp.designsystem.theme.StockAppTypography
-import com.danilobarreto.stockapp.designsystem.util.toDecimalString
 import com.danilobarreto.stockapp.portfolio.domain.PortfolioHistoryPoint
 import com.danilobarreto.stockapp.portfolio.domain.PositionSummary
 import com.danilobarreto.stockapp.designsystem.icons.StockAppIcons
@@ -67,6 +60,8 @@ private fun masked(visible: Boolean, value: () -> String): String =
 @Composable
 fun HomeScreen(
     userName: String,
+    balanceVisible: Boolean,
+    onToggleBalance: () -> Unit,
     viewModel: HomeViewModel,
     onNovaOrdem: () -> Unit,
     onImportarB3: () -> Unit,
@@ -75,7 +70,6 @@ fun HomeScreen(
     onVerCarteira: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var balanceVisible by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) { viewModel.load() }
 
@@ -89,7 +83,7 @@ fun HomeScreen(
             userName = userName,
             uiState = uiState,
             balanceVisible = balanceVisible,
-            onToggleBalance = { balanceVisible = !balanceVisible },
+            onToggleBalance = onToggleBalance,
         )
 
         when (val state = uiState) {

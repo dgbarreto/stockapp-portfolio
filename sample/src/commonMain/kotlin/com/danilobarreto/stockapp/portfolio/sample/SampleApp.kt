@@ -51,6 +51,9 @@ fun SampleApp() {
 
     val isLoggedIn by authRepository.isLoggedIn.collectAsState()
     var screen by remember { mutableStateOf<SampleScreen>(SampleScreen.Home) }
+    // No app real esse estado vem do UiPreferences (persistido, stockapp-app); no sample basta
+    // um estado local compartilhado entre Início e Carteira.
+    var balanceVisible by remember { mutableStateOf(true) }
 
     StockAppTheme {
         if (!isLoggedIn) {
@@ -74,6 +77,8 @@ fun SampleApp() {
                         val homeViewModel = remember { HomeViewModel(portfolioRepository) }
                         HomeScreen(
                             userName = "Investidor",
+                            balanceVisible = balanceVisible,
+                            onToggleBalance = { balanceVisible = !balanceVisible },
                             viewModel = homeViewModel,
                             onNovaOrdem = {},
                             onImportarB3 = {},
@@ -86,6 +91,8 @@ fun SampleApp() {
                         val dashboardViewModel = remember { DashboardViewModel(portfolioRepository) }
                         DashboardScreen(
                             viewModel = dashboardViewModel,
+                            balanceVisible = balanceVisible,
+                            onToggleBalance = { balanceVisible = !balanceVisible },
                             onAddOrder = {},
                             onImport = {},
                             onViewValuation = {},
